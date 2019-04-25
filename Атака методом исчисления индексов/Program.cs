@@ -45,22 +45,23 @@ namespace Атака_методом_исчисления_индексов
                 + pj[3].ToString() + "}\n\n";
 
             int[][] e = new int[m][];
+            int[][] buf = new int[m][];
             for (int i = 0; i < m; i++)
             {
-                int buf3 = 0;
                 e[i] = new int[m];
+                buf[i] = new int[3];
                 do
                 {
-                    int buf = x.Next(2, p - 1);//исходное число
-                    BigInteger bigInteger = BigInteger.ModPow(b, buf, p);
-                    int buf2 = Convert.ToInt32(bigInteger.ToString());//результат по модулю
-                    buf3 = buf2;//здесь будет произведение оставшихся множителей
+                    buf[i][0] = x.Next(2, p - 1);//исходное число
+                    BigInteger bigInteger = BigInteger.ModPow(b, buf[i][0], p);
+                    buf[i][1] = Convert.ToInt32(bigInteger.ToString());//результат по модулю
+                    buf[i][2] = buf[i][1];//здесь будет произведение оставшихся множителей
                     for (int j = 0; j < m; j++)
                     {
                         e[i][j] = 0;
-                        while (buf3 % pj[j] == 0)
+                        while (buf[i][2] % pj[j] == 0)
                         {
-                            buf3 /= pj[j];
+                            buf[i][2] /= pj[j];
                             e[i][j]++;
                         }
                     }
@@ -81,14 +82,14 @@ namespace Атака_методом_исчисления_индексов
                     //}
                     //report += " * " + buf3.ToString() +  " (mod " + p.ToString() + ")\n";
                 }
-                while (buf3 != 1);
+                while (buf[i][2] != 1);
                 //report += "Взяли число!\n";
             }
 
             bool start;
             for (int i = 0; i < m; i++)
             {
-                report += "e = ";
+                report += "e = " + b.ToString() + "^" + buf[i][0].ToString() + " = " + buf[i][1].ToString() + " = ";
                 start = false;
                 for (int j = 0; j < m; j++)
                 {
@@ -103,7 +104,7 @@ namespace Атака_методом_исчисления_индексов
                             report += "^" + e[i][j].ToString();
                     }
                 }
-                report += " (mod " + (p-1).ToString() + ")\n";
+                report += " (mod " + (p).ToString() + ")\n";
             }
 
             int[] log_b_pj = culc_log();
